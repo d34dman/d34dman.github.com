@@ -83,7 +83,7 @@ JB :
   comments :
     provider : disqus
     disqus :
-      short_name : D34dMan
+      short_name : d34dblog
 
   # Settings for analytics helper
   # Set 'provider' to the analytics provider you want to use.
