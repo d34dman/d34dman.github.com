@@ -53,4 +53,77 @@ Prerequisite:
 * You have ssh access to the servers where you want to peform tasks.
 * The individual components of tasks could be executed on the server.
 
-@TODO
+Let us consider a situation where you deploy changes first in development server, then in a staging server and finally on the production. We populate our `fabfile.yaml` as follows
+
+    name: myproject
+    deploymentModule: myproject_deploy
+
+    excludeFiles:
+      backup:
+        - "styles"
+        - "tmp"
+      copyFrom:
+        - "tmp"
+        - "styles"
+
+    hosts:
+      staging:
+        host: example.com
+        user: root
+        password: root
+        port: 22
+        # path to drupal's root folder
+        rootFolder: /var/static/myproject/staging/public
+        gitRootFolder: /var/static/myproject/staging/
+        # path to the site's folder
+        siteFolder: /sites/default
+        filesFolder: /sites/default/files
+        backupFolder: /var/static/myproject/staging/backups
+        useForDevelopment: true
+        # branch to pull
+        branch: develop
+        hasDrush: true
+        supportsInstalls: true
+        database:
+          name: myproject
+          user: root
+          pass: admin
+      release:
+        inheritsFrom: staging
+        host: example.com
+        # branch to pull
+        branch: release/0.1.0
+        rootFolder: /var/static/myproject/010/public
+        gitRootFolder: /var/static/myproject/010/
+        database:
+          name: myproject_010
+          user: root
+          pass: admin
+      production:
+        host: production.com
+        user: root
+        password: root
+        port: 22
+        # path to drupal's root folder
+        rootFolder: /var/www/public
+        gitRootFolder: /var/www/
+        # path to the site's folder
+        siteFolder: /sites/default
+        filesFolder: /sites/default/files
+        backupFolder: /var/www/backups
+        useForDevelopment: false
+        # branch to pull
+        branch: master
+        hasDrush: true
+        supportsInstalls: false
+        database:
+          name: production
+          user: root
+          pass: admin
+
+Then we could,
+To deploy on staging server you could do `fab config:stage deploy`
+To copy database from production to staging you could do `fab config:release copyDBFrom:production`
+To execute a drush command on staging like clearing cache you could `fab config:staging drush:"cc all"`
+
+Please [visit the project page of fabalicious](https://github.com/factorial-io/fabalicious) to know what all tasks have already been implemented.
