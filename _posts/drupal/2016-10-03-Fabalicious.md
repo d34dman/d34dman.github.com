@@ -35,8 +35,10 @@ A script to automate the whole process would be really helpful. That is where fa
 
 So after installing fabric, you can create two files inside your project folder.
 
-    fabfile.py
-    fabfile.yaml
+```
+fabfile.py
+fabfile.yaml
+```
 
 `fabfile.py` is where you would define your tasks. Additionally for convinience we would load project specific configurations from `fabfile.yaml`. This is so that we could reuse `fabfile.py` in other projects without hacking it everytime.
 
@@ -55,71 +57,73 @@ Prerequisite:
 
 Let us consider a situation where you deploy changes first in development server, then in a staging server and finally on the production. We populate our `fabfile.yaml` as follows
 
-    name: myproject
-    deploymentModule: myproject_deploy
+```yaml
+name: myproject
+deploymentModule: myproject_deploy
 
-    excludeFiles:
-      backup:
-        - "styles"
-        - "tmp"
-      copyFrom:
-        - "tmp"
-        - "styles"
+excludeFiles:
+  backup:
+    - "styles"
+    - "tmp"
+  copyFrom:
+    - "tmp"
+    - "styles"
 
-    hosts:
-      staging:
-        host: example.com
-        user: root
-        password: root
-        port: 22
-        # path to drupal's root folder
-        rootFolder: /var/static/myproject/staging/public
-        gitRootFolder: /var/static/myproject/staging/
-        # path to the site's folder
-        siteFolder: /sites/default
-        filesFolder: /sites/default/files
-        backupFolder: /var/static/myproject/staging/backups
-        useForDevelopment: true
-        # branch to pull
-        branch: develop
-        hasDrush: true
-        supportsInstalls: true
-        database:
-          name: myproject
-          user: root
-          pass: admin
-      release:
-        inheritsFrom: staging
-        host: example.com
-        # branch to pull
-        branch: release/0.1.0
-        rootFolder: /var/static/myproject/010/public
-        gitRootFolder: /var/static/myproject/010/
-        database:
-          name: myproject_010
-          user: root
-          pass: admin
-      production:
-        host: production.com
-        user: root
-        password: root
-        port: 22
-        # path to drupal's root folder
-        rootFolder: /var/www/public
-        gitRootFolder: /var/www/
-        # path to the site's folder
-        siteFolder: /sites/default
-        filesFolder: /sites/default/files
-        backupFolder: /var/www/backups
-        useForDevelopment: false
-        # branch to pull
-        branch: master
-        hasDrush: true
-        supportsInstalls: false
-        database:
-          name: production
-          user: root
-          pass: admin
+hosts:
+  staging:
+    host: example.com
+    user: root
+    password: root
+    port: 22
+    # path to drupal's root folder
+    rootFolder: /var/static/myproject/staging/public
+    gitRootFolder: /var/static/myproject/staging/
+    # path to the site's folder
+    siteFolder: /sites/default
+    filesFolder: /sites/default/files
+    backupFolder: /var/static/myproject/staging/backups
+    useForDevelopment: true
+    # branch to pull
+    branch: develop
+    hasDrush: true
+    supportsInstalls: true
+    database:
+      name: myproject
+      user: root
+      pass: admin
+  release:
+    inheritsFrom: staging
+    host: example.com
+    # branch to pull
+    branch: release/0.1.0
+    rootFolder: /var/static/myproject/010/public
+    gitRootFolder: /var/static/myproject/010/
+    database:
+      name: myproject_010
+      user: root
+      pass: admin
+  production:
+    host: production.com
+    user: root
+    password: root
+    port: 22
+    # path to drupal's root folder
+    rootFolder: /var/www/public
+    gitRootFolder: /var/www/
+    # path to the site's folder
+    siteFolder: /sites/default
+    filesFolder: /sites/default/files
+    backupFolder: /var/www/backups
+    useForDevelopment: false
+    # branch to pull
+    branch: master
+    hasDrush: true
+    supportsInstalls: false
+    database:
+      name: production
+      user: root
+      pass: admin
+```
 
 Then we could,
 To deploy on staging server you could do `fab config:stage deploy`
