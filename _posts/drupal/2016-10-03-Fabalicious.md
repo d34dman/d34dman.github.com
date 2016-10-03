@@ -127,3 +127,7 @@ To copy database from production to staging you could do `fab config:release cop
 To execute a drush command on staging like clearing cache you could `fab config:staging drush:"cc all"`
 
 Please [visit the project page of fabalicious](https://github.com/factorial-io/fabalicious) to know what all tasks have already been implemented.
+
+### Conclusion
+
+For those who don't want to get their hands dirty in scripting, fabalicious provides a decent set of tasks that you could perform with fabric on Drupal sites.
