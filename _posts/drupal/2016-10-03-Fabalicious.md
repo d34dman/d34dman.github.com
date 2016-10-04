@@ -46,6 +46,7 @@ So let say we wrote  task called **deploy** in `fabfile.py` and specified our co
 
 Over time you keep on adding more and more tasks into fabfile.py and eventually start adding it as a submodule to every project. Thats how [fabalicious](https://github.com/factorial-io/fabalicious) was born.
 
+## fabalicious
 fabalicious is specially crafted deployment script to help deploy drupal installations across different servers. It reads a yaml-file called `fabfile.yaml` where all project specific hosts are defined.
 
 ### Basic Usage Example.
