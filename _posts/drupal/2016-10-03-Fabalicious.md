@@ -7,7 +7,8 @@ permalink : blogs/drupal/fabalicious-intro.html
 ---
 ## Managing multiple instances of Drupal using fabalicious powered by fabric
 
-A typical deployment cycle that we follow,
+### Scenario
+Lets look at a typical deployment cycle that we follow on Drupal installation,
 
 1. `SSH` : into development server
 2. `TERMINAL` : navigate to project root folder
@@ -16,8 +17,9 @@ A typical deployment cycle that we follow,
 5. `GIT` : pull develop branch from upstream
 6. `DRUSH` : run database updates
 7. `DRUSH` : clear cache
+8. `DRUSH` : turn off maintenance mode
 
-Later, run similar steps for production too, with few changes. 
+Later, run similar steps for production too, with few changes.
 
 As the number of projects grew, so did the number of instances of Drupal we have to deploy and maintain.
 
@@ -28,9 +30,9 @@ As the number of projects grew, so did the number of instances of Drupal we have
 
 A script to automate the whole process would be really helpful. That is where fabric comes for help.
 
-### What is fabric?
+### What is Fabric?
 
->Fabric is a Python (2.5-2.7) library and command-line tool for streamlining the use of SSH for application deployment or systems administration tasks. 
+>Fabric is a Python (2.5-2.7) library and command-line tool for streamlining the use of SSH for application deployment or systems administration tasks.
 >~ http://www.fabfile.org/
 
 So after installing fabric, you can create two files inside your project folder.
@@ -46,8 +48,9 @@ So let say we wrote  task called **deploy** in `fabfile.py` and specified our co
 
 Over time you keep on adding more and more tasks into fabfile.py and eventually start adding it as a submodule to every project. Thats how [fabalicious](https://github.com/factorial-io/fabalicious) was born.
 
-## fabalicious
-fabalicious is specially crafted deployment script to help deploy drupal installations across different servers. It reads a yaml-file called `fabfile.yaml` where all project specific hosts are defined.
+## Fabalicious
+
+*Fabalicious* is specially crafted deployment script to help deploy drupal installations across different servers. It reads a yaml-file called `fabfile.yaml` where all project specific hosts are defined.
 
 ### Basic Usage Example.
 
@@ -127,9 +130,15 @@ hosts:
 ```
 
 Then we could,
-To deploy on staging server you could do `fab config:stage deploy`
-To copy database from production to staging you could do `fab config:release copyDBFrom:production`
-To execute a drush command on staging like clearing cache you could `fab config:staging drush:"cc all"`
+
+* `fab config:stage deploy` : Deploy on staging. 
+* `fab config:release copyDBFrom:production` : Copy database from production to staging. 
+* `fab config:staging drush:"cc all"` : To execute a drush command on staging to clear cache. 
+* and so on ...
+
+Many common tasks like deployment, reset, install, drush, backup, copyFrom, copyDBFrom, etc are already supported.
+Fabalicious also has some exclusive support for [multibasebox](https://github.com/factorial-io/multibasebox), which helps you to serve multiple docker container with the help of haproxy from one vagrant-host.
+
 
 Please [visit the project page of fabalicious](https://github.com/factorial-io/fabalicious) to know what all tasks have already been implemented.
 
