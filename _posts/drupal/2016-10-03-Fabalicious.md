@@ -8,7 +8,10 @@ permalink : blogs/drupal/fabalicious-intro.html
 ## Managing multiple instances of Drupal using fabalicious powered by fabric
 
 ### Scenario
-Lets look at a typical deployment cycle that we follow on Drupal installation,
+
+![Multiple Instances](Drupal-Instances-Map.png "Drupal instances across multiple servers for same project.")
+
+Lets look at a typical deployment cycle that we follow on Drupal installations,
 
 1. `SSH` : into development server
 2. `TERMINAL` : navigate to project root folder
@@ -19,16 +22,19 @@ Lets look at a typical deployment cycle that we follow on Drupal installation,
 7. `DRUSH` : clear cache
 8. `DRUSH` : turn off maintenance mode
 
-Later, run similar steps for production too, with few changes.
+These steps with very little variations is prefomed by Stephanie, Mario and Bob.
 
 As the number of projects grew, so did the number of instances of Drupal we have to deploy and maintain.
+And good luck if you are the Stephanie, Mario and Bob in your company.
 
 ### The Problem
 
 * Needed some way to keep track of all the instances related to a particular project.
 * Wanted somebody to take care of the mundane repititive task of deployment.
 
-A script to automate the whole process would be really helpful. That is where fabric comes for help.
+A *script* to automate the whole process is obviously helpful. We also needed something that would take care of running our script accross various servers.
+
+Thats where fabric comes to help us.
 
 ### What is Fabric?
 
@@ -37,16 +43,19 @@ A script to automate the whole process would be really helpful. That is where fa
 
 So after installing fabric, you can create two files inside your project folder.
 
-```
-fabfile.py
-fabfile.yaml
-```
+- `fabfile.py` is where you would define your tasks.
 
-`fabfile.py` is where you would define your tasks. Additionally for convinience we would load project specific configurations from `fabfile.yaml`. This is so that we could reuse `fabfile.py` in other projects without hacking it everytime.
+- `fabfile.yaml` is where we would store our project specific configurations.
 
-So let say we wrote  task called **deploy** in `fabfile.py` and specified our configuration for development server in `fabfile.yaml` under key **develop**. Then we could simply do `fab config:develop deploy`. While the fabric runs all the deployment task for you. You can go, grab a coffee, or collect your dark elixers from Clash of Clans, or tell me what you did with the extra time you got in comments below.
+__This is so that we could reuse `fabfile.py` in other projects without hacking it everytime.__
 
-Over time you keep on adding more and more tasks into fabfile.py and eventually start adding it as a submodule to every project. Thats how [fabalicious](https://github.com/factorial-io/fabalicious) was born.
+So let say we create a task called **deploy** in `fabfile.py` and specified our configuration for development server in `fabfile.yaml` under key **develop**. Then we could simply do `fab config:develop deploy`. While the fabric runs all the deployment task for you. You can go, grab a coffee, or collect your dark elixers from Clash of Clans, or tell me what you did with the extra time you got in comments below.
+
+Over time you keep on adding more and more tasks into fabfile.py and eventually start adding it as a submodule to every project.
+
+Thats how [fabalicious](https://github.com/factorial-io/fabalicious) was born.
+
+fabalicious is nothing other than the `fabfile.py`, that nice folks at [factorial.io](http://factorial.io/) created for internal use.
 
 ## Fabalicious
 
@@ -59,10 +68,14 @@ Prerequisite:
 * You have ssh access to the servers where you want to peform tasks.
 * The individual components of tasks could be executed on the server.
 
-Let us consider a situation where you deploy changes first in development server, then in a staging server and finally on the production. We populate our `fabfile.yaml` as follows
+When using fabalicious, all we need to do is populate the `fabfile.yaml` with details about the server.
+
+Below is a populated fabfile.yaml for a typical setup involving development, staging and production server.
 
 ```yaml
 name: myproject
+requires: 2.0
+
 deploymentModule: myproject_deploy
 
 excludeFiles:
@@ -74,8 +87,9 @@ excludeFiles:
     - "styles"
 
 hosts:
-  staging:
+  dev:
     host: example.com
+    type: dev
     user: root
     password: root
     port: 22
@@ -86,18 +100,17 @@ hosts:
     siteFolder: /sites/default
     filesFolder: /sites/default/files
     backupFolder: /var/static/myproject/staging/backups
-    useForDevelopment: true
     # branch to pull
     branch: develop
-    hasDrush: true
     supportsInstalls: true
     database:
       name: myproject
       user: root
       pass: admin
-  release:
-    inheritsFrom: staging
+  stage:
+    inheritsFrom: dev
     host: example.com
+    type: stage
     # branch to pull
     branch: release/0.1.0
     rootFolder: /var/static/myproject/010/public
@@ -108,6 +121,7 @@ hosts:
       pass: admin
   production:
     host: production.com
+    type: live
     user: root
     password: root
     port: 22
@@ -118,10 +132,8 @@ hosts:
     siteFolder: /sites/default
     filesFolder: /sites/default/files
     backupFolder: /var/www/backups
-    useForDevelopment: false
     # branch to pull
     branch: master
-    hasDrush: true
     supportsInstalls: false
     database:
       name: production
@@ -131,12 +143,17 @@ hosts:
 
 Then we could,
 
-* `fab config:stage deploy` : Deploy on staging. 
-* `fab config:release copyDBFrom:production` : Copy database from production to staging. 
-* `fab config:staging drush:"cc all"` : To execute a drush command on staging to clear cache. 
+* `fab config:dev deploy` : Deploy on development server.
+* `fab config:stage copyDBFrom:production` : Copy database from production to staging.
+* `fab config:stage drush:"cc all"` : To execute a drush command on staging to clear cache.
 * and so on ...
 
-Many common tasks like deployment, reset, install, drush, backup, copyFrom, copyDBFrom, etc are already supported.
+![Fabalicious Command](fabalicious-command-breakdown.png "Fabalicious command structure.")
+
+Many common tasks like deployment, reset, install, drush, drupalConsole, backup, copyFrom, copyDBFrom, etc are already supported.
+
+__NOTE: `git`, `drush` and `drupal_console` has to be present in remote installation to be able to use them__
+
 Fabalicious also has some exclusive support for [multibasebox](https://github.com/factorial-io/multibasebox), which helps you to serve multiple docker container with the help of haproxy from one vagrant-host.
 
 
