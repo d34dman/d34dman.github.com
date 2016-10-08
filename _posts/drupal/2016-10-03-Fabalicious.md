@@ -9,7 +9,7 @@ permalink : blogs/drupal/fabalicious-intro.html
 
 ### Scenario
 
-![Multiple Instances](Drupal-Instances-Map.png "Drupal instances across multiple servers for same project.")
+![Multiple Instances](/assets/images/Drupal-Instances-Map.png "Drupal instances across multiple servers for same project.")
 
 Lets look at a typical deployment cycle that we follow on Drupal installations,
 
@@ -148,7 +148,7 @@ Then we could,
 * `fab config:stage drush:"cc all"` : To execute a drush command on staging to clear cache.
 * and so on ...
 
-![Fabalicious Command](fabalicious-command-breakdown.png "Fabalicious command structure.")
+![Fabalicious Command](/assets/images/fabalicious-command-breakdown.png "Fabalicious command structure.")
 
 Many common tasks like deployment, reset, install, drush, drupalConsole, backup, copyFrom, copyDBFrom, etc are already supported.
 
