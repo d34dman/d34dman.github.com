@@ -48,6 +48,7 @@ ln -s _tools/fabalicious/fabfile.py fabfile.py
 git add fabfile.py
 git commit -m "Add fabalicious as submodule"
 ```
+
 #### STEP 3: Create project specific **fabfile.yaml**
 Create fabfile.yaml under project folder and populate it with server details.
 
@@ -70,6 +71,7 @@ hosts:
   siteFolder: /sites/default
   backupFolder: /var/backups
 ```
+
 #### Using Fabalicious
 
 Fabalicious command structure if of format `fab config:<host> <task>`.
