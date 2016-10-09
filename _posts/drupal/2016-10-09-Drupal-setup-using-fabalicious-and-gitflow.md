@@ -112,9 +112,9 @@ In `fabfile.yaml`, you can specifiy the branch that needs to be checked out and 
 
 ```yaml
 hosts:
-dev:
-branch: develop
-type: dev
-host: example.com
+  dev:
+  branch: develop
+  type: dev
+  host: example.com
 ```
 
