@@ -100,7 +100,7 @@ To see a full list of supported task, please checkout [the tasks documentation i
 
 ## What next?
 
-##### Using [Gitflow](https://github.com/nvie/gitflow) with fabalicious
+#### Using [Gitflow](https://github.com/nvie/gitflow) with fabalicious
 
 Gitflow is [a successful Git branching model](http://nvie.com/posts/a-successful-git-branching-model/) by Vincent Driessen.
 
